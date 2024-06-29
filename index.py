@@ -24,13 +24,17 @@ def invert_image(image_path):
   return inverted_path
 
 
-def invert_to_pdf(image_paths, file_name): 
+def invert_to_pdf(image_paths, file_name, output_folder): 
   images = []
   for image in image_paths:
     images.append(Image.open(image))
     os.remove(image)
 
-  pdf_path = "./cifras-alteradas/" + file_name
+  # Criar pasta se não existir
+  if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
+
+  pdf_path =  os.path.join(output_folder, file_name)
       
   images[0].save(
       pdf_path, "PDF" ,resolution=100.0, save_all=True, append_images=images[1:]
@@ -39,7 +43,7 @@ def invert_to_pdf(image_paths, file_name):
 
 
 
-def proccess_folder(input_folder = "./cifras"):
+def proccess_folder(input_folder = "./cifras", output_folder = "./cifras-alteradas"):
   for root, dirs, files in os.walk(input_folder):
     for file in files:
       if file.endswith(".pdf"):
@@ -50,7 +54,10 @@ def proccess_folder(input_folder = "./cifras"):
         for path in paths:
           inverted_paths.append(invert_image(path))
 
-        invert_to_pdf(inverted_paths, file.split('/')[-1])
+        invert_to_pdf(inverted_paths, file.split('/')[-1], output_folder)
         print("File " + file + " has been processed")
 
-proccess_folder()
+# Digitar o nome da pasta que contém os arquivos pdf
+folder_name = input("Digite o nome da pasta que contém os arquivos pdf: ")
+output_folder = input("Digite o nome da pasta de saída: ")
+proccess_folder(folder_name, output_folder)
