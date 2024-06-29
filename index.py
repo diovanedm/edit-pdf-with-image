@@ -37,11 +37,20 @@ def invert_to_pdf(image_paths, file_name):
   )
   
 
-file = 'cifras/a-alegria-cifra.pdf'
-paths = convert_pdf_to_images(file)
-inverted_paths = []
 
-for path in paths:
-  inverted_paths.append(invert_image(path))
 
-invert_to_pdf(inverted_paths, file.split('/')[-1])
+def proccess_folder(input_folder = "./cifras"):
+  for root, dirs, files in os.walk(input_folder):
+    for file in files:
+      if file.endswith(".pdf"):
+        file = os.path.join(root, file)
+        paths = convert_pdf_to_images(file)
+        inverted_paths = []
+
+        for path in paths:
+          inverted_paths.append(invert_image(path))
+
+        invert_to_pdf(inverted_paths, file.split('/')[-1])
+        print("File " + file + " has been processed")
+
+proccess_folder()
