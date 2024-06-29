@@ -24,24 +24,24 @@ def invert_image(image_path):
   return inverted_path
 
 
-def invert_to_pdf(image_paths): 
+def invert_to_pdf(image_paths, file_name): 
   images = []
   for image in image_paths:
     images.append(Image.open(image))
     os.remove(image)
 
-  pdf_path = "./musica.pdf"
+  pdf_path = "./cifras-alteradas/" + file_name
       
   images[0].save(
       pdf_path, "PDF" ,resolution=100.0, save_all=True, append_images=images[1:]
   )
   
 
-
-paths = convert_pdf_to_images('cifras/a-alegria-cifra.pdf')
-
+file = 'cifras/a-alegria-cifra.pdf'
+paths = convert_pdf_to_images(file)
 inverted_paths = []
+
 for path in paths:
   inverted_paths.append(invert_image(path))
 
-invert_to_pdf(inverted_paths)
+invert_to_pdf(inverted_paths, file.split('/')[-1])
